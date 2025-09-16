@@ -14,6 +14,7 @@ const createRequest = async (req, res) => {
     }
 };
 
+
 const getAllRequests = async (req, res) => {
     try {
         const requests = await Request.find().sort({ createdAt: -1 });
