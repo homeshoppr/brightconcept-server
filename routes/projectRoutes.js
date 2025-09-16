@@ -105,16 +105,45 @@ propertyRouter.get('/all/cities', cities);
 
 propertyRouter.get('/items/search', searchProject);
 
+// propertyRouter.get("/get/service/:slug", async (req, res) => {
+//   try {
+//     const { slug } = req.params;
+
+//     // Convert slug to proper name (replace hyphen with space)
+//     const serviceName = slug.replace(/-/g, " ");
+
+//     // Find service using case-insensitive search on serviceName field
+//     const service = await Service.findOne({
+//       serviceName: { $regex: new RegExp(`^${serviceName}$`, "i") },
+//     });
+
+//     if (!service) {
+//       return res.status(404).json({ message: "Service not found" });
+//     }
+
+//     res.json(service);
+//   } catch (error) {
+//     console.error("Error fetching service:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+
 propertyRouter.get("/get/service/:slug", async (req, res) => {
   try {
     const { slug } = req.params;
 
-    // Convert slug to proper name (replace hyphen with space)
-    const serviceName = slug.replace(/-/g, " ");
+    // Slug se hyphen hatao
+    const serviceName = slug.replace(/-/g, "").toLowerCase();
 
-    // Find service using case-insensitive search on serviceName field
+    // MongoDB aggregation for case-insensitive + remove space compare
     const service = await Service.findOne({
-      serviceName: { $regex: new RegExp(`^${serviceName}$`, "i") },
+      $expr: {
+        $eq: [
+          { $replaceAll: { input: { $toLower: "$serviceName" }, find: " ", replacement: "" } },
+          serviceName
+        ]
+      }
     });
 
     if (!service) {
@@ -127,8 +156,6 @@ propertyRouter.get("/get/service/:slug", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
 
 
 
