@@ -109,12 +109,12 @@ propertyRouter.get("/get/service/:slug", async (req, res) => {
   try {
     const { slug } = req.params;
 
-    // Convert slug to title (replace - with space)
-    const title = slug.replace(/-/g, " ");
+    // Convert slug to proper name (replace hyphen with space)
+    const serviceName = slug.replace(/-/g, " ");
 
-    // Find service with this title (case-insensitive)
+    // Find service using case-insensitive search on serviceName field
     const service = await Service.findOne({
-      title: { $regex: new RegExp(`^${title}$`, "i") }
+      serviceName: { $regex: new RegExp(`^${serviceName}$`, "i") },
     });
 
     if (!service) {
@@ -127,6 +127,7 @@ propertyRouter.get("/get/service/:slug", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 
