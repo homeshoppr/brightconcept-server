@@ -18,6 +18,7 @@ import {
 } from "../controller/projectController.js";
 import upload from '../config/multerConfig.js';
 import {authMiddleware} from "../middleware/authMiddleware.js";
+import Service from "../models/serviceModel.js";
 
 const propertyRouter = Router();
 
@@ -103,6 +104,31 @@ propertyRouter.get('/home/:category', propertiesHome);
 propertyRouter.get('/all/cities', cities);
 
 propertyRouter.get('/items/search', searchProject);
+
+propertyRouter.get("/get/service/:slug", async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    // Convert slug to title (replace - with space)
+    const title = slug.replace(/-/g, " ");
+
+    // Find service with this title (case-insensitive)
+    const service = await Service.findOne({
+      title: { $regex: new RegExp(`^${title}$`, "i") }
+    });
+
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+
+    res.json(service);
+  } catch (error) {
+    console.error("Error fetching service:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 
 
 export default propertyRouter
