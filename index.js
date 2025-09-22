@@ -23,6 +23,7 @@ const app = express();
 
 
 
+
 const Port = process.env.PORT || 3000;
 
 const allowedOrigins = process.env.CORS_ORIGIN?.split(",") || ["http://localhost:5174"];
