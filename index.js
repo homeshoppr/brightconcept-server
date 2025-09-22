@@ -18,6 +18,7 @@ import countRoutes from "./routes/countRoutes.js";
 // import blogRoutes from './routes/blogRoutes.js';
 import Typecategory from './routes/Typeroute.js';
 
+
 dotenv.config();
 const app = express();
 
