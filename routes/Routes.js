@@ -29,6 +29,7 @@
 
 
 import express from 'express';
+import path from "path";
 import fs from "fs";
 import Papa from "papaparse";
 
@@ -53,7 +54,8 @@ router.get('/singleCategory/:id',GetSingleCategory)
 router.post ('/CategoryUpdate/:id',CategoryUpdateFunc)
 router.delete('/categorydelete/:id',Categorydeletefunc)
 router.get("/api/meta-metrics", (req, res) => {
-  const file = fs.readFileSync("meta_mom_sample.csv", "utf8");
+  const filePath = path.join(process.cwd(), "public", "meta_mom_sample.csv");
+  const file = fs.readFileSync(filePath, "utf8");
   const parsed = Papa.parse(file, { header: true, dynamicTyping: true });
   res.json(parsed.data);
 });
